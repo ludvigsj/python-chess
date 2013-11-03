@@ -75,9 +75,10 @@ def printBoard(board):
                 line += (" " if (x%2+y%2)%2 else "█")
             line += ("  " if (x%2+y%2)%2 else "██")
         print(padLine+"║")
-        print(line+"║")
+        print(line+"║%i"%(y+1))
         print(padLine+"║")
     print(" ╘"+"═"*5*8+"╝")
+    print("    A    B    C    D    E    F    G    H")
             
 def checkForKingInCheck(color,board):
     for x in range(8):
