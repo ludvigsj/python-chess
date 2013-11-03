@@ -89,9 +89,17 @@ def knightGetLegals(piece, startPos, board):
     
     for x in (-1,1):
         for y in (-1,1):
-            if bounds(X0+2*x) and bounds(X0+y) and board[X0+2*x][Y0+y]["col"] != piece["col"]:
-                results.append((X0+2*x,Y0+y))
-            if bounds(X0+x) and bounds(X0+2*y) and board[X0+x][Y0+2*y]["col"] != piece["col"]:
-                results.append((X0+x,Y0+2*y))
-                
+            if bounds(X0+2*x) and bounds(Y0+y):
+                if board[X0+2*x][Y0+y]:
+                    if board[X0+2*x][Y0+y]["col"] != piece["col"]:
+                        results.append((X0+2*x,Y0+y))
+                else:
+                    results.append((X0+2*x,Y0+y))
+            if bounds(X0+x) and bounds(Y0+2*y):
+                if board[X0+x][Y0+2*y]:
+                    if board[X0+x][Y0+2*y]["col"] != piece["col"]:
+                        results.append((X0+x,Y0+2*y))
+                else:
+                    results.append((X0+x,Y0+2*y))
+                        
     return results
