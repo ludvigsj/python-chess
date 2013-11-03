@@ -79,7 +79,7 @@ def queenGetLegals(piece, startPos, board):
 def kingGetLegals(piece, startPos, board):
     X0 = startPos[X]
     Y0 = startPos[Y]    
-    return [(x,y) for x in range(X0-1,X0+2) for y in range(Y0-1,Y0+2) if bounds(x) and bounds(y) and board[x][y]["col"] != piece["col"]]
+    return [(x,y) for x in range(X0-1,X0+2) for y in range(Y0-1,Y0+2) if bounds(x) and bounds(y) and ((board[x][y] and board[x][y]["col"] != piece["col"]) or (not board[x][y]))]
 
 def knightGetLegals(piece, startPos, board):
     Y0 = startPos[Y]

@@ -2,12 +2,12 @@
 import movecheckfuncs
 from copy import deepcopy
 
-PAWN=   {"leg": movecheckfuncs.pawnGetLegals, "hasMoved": False, "col": -1, "sym": ("B","b"), "letter": ""}
-KNIGHT= {"leg": movecheckfuncs.knightGetLegals, "col": -1, "sym": ("S","s"), "letter": "S"}
-BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "col": -1, "sym": ("L","l"), "letter": "L"}
-ROOK=   {"leg": movecheckfuncs.rookGetLegals, "col": -1, "sym": ("T","t"), "letter": "T"}
-QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "col": -1, "sym": ("D","d"), "letter": "D"}
-KING=   {"leg": movecheckfuncs.kingGetLegals, "col": -1, "sym": ("K","k"), "letter": "K"}
+PAWN=   {"leg": movecheckfuncs.pawnGetLegals, "hasMoved": False, "col": -1, "sym": ("B","b"), "letter": "", "name":"en bonde"}
+KNIGHT= {"leg": movecheckfuncs.knightGetLegals, "col": -1, "sym": ("S","s"), "letter": "S", "name":"en springer"}
+BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "col": -1, "sym": ("L","l"), "letter": "L", "name":"en løper"}
+ROOK=   {"leg": movecheckfuncs.rookGetLegals, "col": -1, "sym": ("T","t"), "letter": "T", "name":"et tårn"}
+QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "col": -1, "sym": ("D","d"), "letter": "D", "name":"en dronning"}
+KING=   {"leg": movecheckfuncs.kingGetLegals, "col": -1, "sym": ("K","k"), "letter": "K", "name":"en konge"}
 
 LETTERS={"A":0,"B":1,"C":2,"D":3,"E":4,"F":5, "G":6, "H":7}
 
@@ -23,9 +23,11 @@ def main():
         command = input(("Hvit, " if currentColor == WHITE else "Svart, ") + "skriv inn trekk: ").split("-")
         startTile = (LETTERS[command[0][0]],int(command[0][1])-1)
         endTile = (LETTERS[command[1][0]],int(command[1][1])-1)
-        move(currentColor,startTile,endTile,board)
-        printBoard(board)
-        currentColor = (currentColor+1)%2
+        results = move(currentColor,startTile,endTile,board)
+        if not results == -1:
+            board = results
+            printBoard(board)
+            currentColor = (currentColor+1)%2
         
     
 def printHelp():
@@ -51,8 +53,8 @@ def createBoard(initPieces):
     
 def checkForCheck(pos,board):
     ownColor = board[pos[0]][pos[1]]["col"]
-    for x in board:
-        for y in x:
+    for x in range(8):
+        for y in range(8):
             piece = board[x][y]
             if piece and piece["col"] != ownColor and (pos in piece["leg"](piece,(x,y),board)):
                 return True
@@ -78,30 +80,37 @@ def printBoard(board):
     print(" ╘"+"═"*5*8+"╝")
             
 def checkForKingInCheck(color,board):
-    for x in board:
-        for y in x:
+    for x in range(8):
+        for y in range(8):
             piece = board[x][y]
-            if piece["letter"] == "K" and piece["col"] == color:
-                checkForCheck((x,y),board)
+            if piece and piece["letter"] == "K" and piece["col"] == color:
+                return checkForCheck((x,y),board)
 
 def move(color,startPos,endPos,board):
     newBoard = getMoveRes(color,startPos,endPos,board)
-    if newBoard != board:
-        if checkForKingInCheck(color,board):
-            print("Ulovlig trekk: Du kan ikke sette din egen konge i sjakk")
-        else:
-            board = newBoard
+    if newBoard == -1:
+        return -1
+    if checkForKingInCheck(color,newBoard):
+        print("Ulovlig trekk: Du kan ikke sette din egen konge i sjakk")
+        return -1
+    else:
+        return newBoard
 
 def getMoveRes(color,startPos,endPos,board):
-    newBoard = board.copy()
+    newBoard = deepcopy(board)
     piece = newBoard[startPos[0]][startPos[1]]
     if piece and piece["col"] == color:
         if endPos in piece["leg"](piece,startPos,newBoard):
+            if newBoard[endPos[0]][endPos[1]]:
+                print(("Svart " if color else "Hvit ") + "mistet " + newBoard[endPos[0]][endPos[1]]["name"])
             newBoard[endPos[0]][endPos[1]] = newBoard[startPos[0]][startPos[1]]
             newBoard[startPos[0]][startPos[1]] = None
         else:
             print("ULOVLIG TREKK!")
-            return board
+            return -1
+    else:
+        print("Ingen brikke på det feltet" if not piece else "Du kan ikke flytte på motstanderens brikker")
+        return -1
     return newBoard
             
 
