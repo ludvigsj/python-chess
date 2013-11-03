@@ -27,7 +27,15 @@ def main():
         if not results == -1:
             board = results
             printBoard(board)
+            if isCheckMate(WHITE,board):
+                print("Sjakkmatt! Svart spiller vant")
+                break
+            if isCheckMate(BLACK,board):
+                print("Sjakkmatt! Hvit spiller vant")
+                break
             currentColor = (currentColor+1)%2
+            if isInCheck(currentColor,board):
+                print("Din konge står i sjakk")
         
     
 def printHelp():
@@ -51,7 +59,7 @@ def createBoard(initPieces):
     return board
 
     
-def checkForCheck(pos,board):
+def isAttacked(pos,board):
     ownColor = board[pos[0]][pos[1]]["col"]
     for x in range(8):
         for y in range(8):
@@ -59,6 +67,18 @@ def checkForCheck(pos,board):
             if piece and piece["col"] != ownColor and (pos in piece["leg"](piece,(x,y),board)):
                 return True
     return False
+
+def isCheckMate(color,board):
+    for x in range(8):
+        for y in range(8):
+            piece = board[x][y]
+            if piece and piece["col"] == color:
+                for move in piece["leg"](piece,(x,y),board):
+                    newBoard = getMoveRes(color,(x,y),move,board)
+                    if not isInCheck(color,newBoard):
+                        return False
+    return True
+                
 
 def printBoard(board):
     print("    A    B    C    D    E    F    G    H")
@@ -80,18 +100,18 @@ def printBoard(board):
     print(" ╘"+"═"*5*8+"╝")
     print("    A    B    C    D    E    F    G    H")
             
-def checkForKingInCheck(color,board):
+def isInCheck(color,board):
     for x in range(8):
         for y in range(8):
             piece = board[x][y]
             if piece and piece["letter"] == "K" and piece["col"] == color:
-                return checkForCheck((x,y),board)
+                return isAttacked((x,y),board)
 
 def move(color,startPos,endPos,board):
     newBoard = getMoveRes(color,startPos,endPos,board)
     if newBoard == -1:
         return -1
-    if checkForKingInCheck(color,newBoard):
+    if isInCheck(color,newBoard):
         print("Ulovlig trekk: Du kan ikke sette din egen konge i sjakk")
         return -1
     else:
