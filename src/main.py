@@ -21,8 +21,12 @@ def main():
     printBoard(board)
     while True:
         command = input(("Hvit, " if currentColor == WHITE else "Svart, ") + "skriv inn trekk: ").split("-")
-        startTile = (LETTERS[command[0][0]],int(command[0][1])-1)
-        endTile = (LETTERS[command[1][0]],int(command[1][1])-1)
+        try:
+            startTile = (LETTERS[command[0][0].upper()],int(command[0][1])-1)
+            endTile = (LETTERS[command[1][0].upper()],int(command[1][1])-1)
+        except:
+            print("Ugyldig kommandoformat. Skriv på formen fra-felt + bindestrek + til-felt")
+            continue
         results = move(currentColor,startTile,endTile,board)
         if not results == -1:
             board = results
@@ -125,9 +129,10 @@ def getMoveRes(color,startPos,endPos,board):
             if newBoard[endPos[0]][endPos[1]]:
                 print(("Svart " if color else "Hvit ") + "mistet " + newBoard[endPos[0]][endPos[1]]["name"])
             newBoard[endPos[0]][endPos[1]] = newBoard[startPos[0]][startPos[1]]
+            newBoard[endPos[0]][endPos[1]]["hasMoved"] = True
             newBoard[startPos[0]][startPos[1]] = None
         else:
-            print("ULOVLIG TREKK!")
+            print("Ulovlig trekk!")
             return -1
     else:
         print("Ingen brikke på det feltet" if not piece else "Du kan ikke flytte på motstanderens brikker")
