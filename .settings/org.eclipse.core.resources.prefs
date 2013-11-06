@@ -1,2 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/main.py=utf-8
+encoding//src/classes.py=UTF-8
+encoding//src/main.old.py=utf-8
+encoding//src/main.py=UTF-8
