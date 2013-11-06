@@ -12,9 +12,6 @@ COLOR_NAMES = ("Svart", "Hvit")
 WHITE = 1
 BLACK = 0
 
-SHORT_CASTLING = "0-0"
-LONG_CASTLING = "0-0-0"
-
 def getStartSetup():
         startStp = [[None for i in range(8)] for j in range(8)]
         tp = Piece.Type
@@ -33,49 +30,6 @@ def getStartSetup():
             startStp[x][6] = pawnB
             startStp[x][7] = pieceB
         return startStp
-
-def parseCommand(commandString):
-    if command == "0-0":
-        return 
-    command = commandString.split("-")
-    x1 = letters[command[0][0].upper()]
-    y1 = int(command[0][1])-1
-    x2 = letters[command[1][0].upper()]
-    y2 = int(command[1][1])-1
-    return ((x1,y1),(x2,y2))
-
-def printHelp():
-    print("""
-    Velkommen til PyChess.
-
-    Kommandoer skrives på formen [Fra-felt]-[Til-felt] (For eksempel E2-E4)
-    Spesialkommandoer:
-     - Kort rokade: 0-0
-     - Lang rokade: 0-0-0
-
-    Sjakkbrikkene vises ved første forbokstav i navnet. b = bonde, l = løper osv.
-    Små bokstaver er hvite brikker, store bokstaver er svarte
-    """)
-    input("Trykk enter for å fortsette...")
-
-class ChessGame():
-    def __init__(self, setUp=True):
-        self.board = Board()
-        if setUp: self.board.startSetup(); self.playing = WHITE    
-    
-    def start(self):
-        while True:
-            print(self.board.getGraphicString())
-            commandString = input(COMMAND_PROMPT%(COLOR_NAMES[self.playing]))
-            if commandString.lower() == HELP_COMMAND:
-                printHelp()
-                continue
-            if commandString == LONG_CASTLING or commandString == SHORT_CASTLING:
-                tryCastling
-            try:
-                command = parseCommand(commandString)
-            except:
-                print(PARSE_ERROR)
             
 class Piece():
     class Type:
@@ -132,12 +86,3 @@ class Board():
         string += (" ╘"+"═"*5*8+"╝\n")
         string += ("    A    B    C    D    E    F    G    H")
         return string
-
-def main():
-    game = ChessGame()
-    game.start()
-    while input("Omkamp? (y/n)").lower == "y":
-        game = ChessGame()
-        game.start()
-        
-main()
