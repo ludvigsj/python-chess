@@ -11,7 +11,7 @@ KING=   {"leg": movecheckfuncs.kingGetLegals, "col": -1, "sym": ("K","k"), "lett
 
 LETTERS={"A":0,"B":1,"C":2,"D":3,"E":4,"F":5, "G":6, "H":7}
 
-WHITE = 1;
+WHITE = 1; #TESTUR
 BLACK = 0
 
 def main():
