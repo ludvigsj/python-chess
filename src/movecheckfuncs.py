@@ -6,20 +6,22 @@ bounds = lambda x: x <= 7 and x >= 0
 
 def pawnGetLegals(piece, startPos, board):
     
+    print(board)
+    
     Y0 = startPos[Y]
     X0 = startPos[X]
     
     results = []
     
-    if piece["col"] == WHITE:
+    if piece.color == WHITE:
         incr = 1
-    elif piece["col"] == BLACK:
+    elif piece.color == BLACK:
         incr = -1
-    if bounds(Y0+incr) and not board[X0][Y0+incr]:
+    if bounds(Y0+incr) and not board.getPiece(X0, Y0+incr):
         results.append((X0,Y0+incr))
-    if not piece["hasMoved"] and bounds(Y0+2*incr) and not board[X0][Y0+2*incr]:
+    if not piece.hasMoved and bounds(Y0+2*incr) and not board.getPiece(X0, Y0+2*incr):
         results.append((X0,Y0+2*incr))
-    results += [(X0+amt,Y0+incr) for amt in (-1,1) if bounds(Y0+incr) and bounds(X0+amt) and board[X0+amt][Y0+incr] and (board[X0+amt][Y0+incr]["col"] != piece["col"])]
+    results += [(X0+amt,Y0+incr) for amt in (-1,1) if bounds(Y0+incr) and bounds(X0+amt) and board.getPiece(X0+amt, Y0+incr) and (board.getPiece(X0+amt, Y0+incr).color != piece.color)]
     return results
     
     
@@ -32,15 +34,15 @@ def rookGetLegals(piece, startPos, board):
     
     def addAllXInRange(rng):
         for x in rng:
-            if board[x][Y0]:
-                if board[x][Y0]["col"] != piece["col"]: results.append((x,Y0))
+            if board.getPiece(x,Y0):
+                if board(x,Y0).color != piece.color: results.append((x,Y0))
                 break
             results.append((x,Y0))
         
     def addAllYInRange(rng):
         for y in rng:
-            if board[X0][y]:
-                if board[X0][y]["col"] != piece["col"]: results.append((X0,y))
+            if board.getPiece(X0,y):
+                if board.getPiece(X0,y).color != piece.color: results.append((X0,y))
                 break
             results.append((X0,y))
     
@@ -61,8 +63,8 @@ def bishopGetLegals(piece, startPos, board):
     def ettEllerAnnet(x,y):
         for dist in range(1,8):
             if bounds(X0+x*dist) and bounds(Y0+y*dist):
-                if board[X0+x*dist][Y0+y*dist]:
-                    if board[X0+x*dist][Y0+y*dist]["col"] != piece["col"]: results.append((X0+x*dist,Y0+y*dist))
+                if board.getPiece(X0+x*dist,Y0+y*dist):
+                    if board.getPiece(X0+x*dist,Y0+y*dist).color != piece.color: results.append((X0+x*dist,Y0+y*dist))
                     return
                 results.append((X0+x*dist,Y0+y*dist))
     
@@ -79,7 +81,7 @@ def queenGetLegals(piece, startPos, board):
 def kingGetLegals(piece, startPos, board):
     X0 = startPos[X]
     Y0 = startPos[Y]    
-    return [(x,y) for x in range(X0-1,X0+2) for y in range(Y0-1,Y0+2) if bounds(x) and bounds(y) and ((board[x][y] and board[x][y]["col"] != piece["col"]) or (not board[x][y]))]
+    return [(x,y) for x in range(X0-1,X0+2) for y in range(Y0-1,Y0+2) if bounds(x) and bounds(y) and ((board.getPiece(x,y) and board.getPiece(x,y).color != piece.color) or (not board.getPiece(x,y)))]
 
 def knightGetLegals(piece, startPos, board):
     Y0 = startPos[Y]
@@ -90,14 +92,14 @@ def knightGetLegals(piece, startPos, board):
     for x in (-1,1):
         for y in (-1,1):
             if bounds(X0+2*x) and bounds(Y0+y):
-                if board[X0+2*x][Y0+y]:
-                    if board[X0+2*x][Y0+y]["col"] != piece["col"]:
+                if board.getPiece(X0+2*x,Y0+y):
+                    if board.getPiece(X0+2*x,Y0+y).color != piece.color:
                         results.append((X0+2*x,Y0+y))
                 else:
                     results.append((X0+2*x,Y0+y))
             if bounds(X0+x) and bounds(Y0+2*y):
-                if board[X0+x][Y0+2*y]:
-                    if board[X0+x][Y0+2*y]["col"] != piece["col"]:
+                if board.getPiece(X0+x,Y0+2*y):
+                    if board.getPiece(X0+x,Y0+2*y).color != piece.color:
                         results.append((X0+x,Y0+2*y))
                 else:
                     results.append((X0+x,Y0+2*y))

@@ -1,5 +1,4 @@
 import movecheckfuncs
-from math import abs
 from copy import deepcopy
 
 COMMAND_PROMPT = "%s, skriv inn en kommando: "
@@ -13,19 +12,19 @@ COLOR_NAMES = ("Svart", "Hvit")
 WHITE = 1
 BLACK = 0
 
-def getStartSetup():
+def getStartSetup(board):
         startStp = [[None for i in range(8)] for j in range(8)]
         tp = Piece.Type
         mainRow = (tp.ROOK, tp.KNIGHT, tp.BISHOP, tp.QUEEN, tp.KING, tp.BISHOP, tp.KNIGHT, tp.ROOK)
         for x in range(len(mainRow)):
             pieceW = Piece(mainRow[x], WHITE)
-            pieceW.x = x; pieceW.y = 0
+            pieceW.x = x; pieceW.y = 0; pieceW.board = board
             pawnW = Piece(tp.PAWN, WHITE)
-            pawnW.x = x; pawnW.y = 1
+            pawnW.x = x; pawnW.y = 1; pawnW.board = board
             pieceB = Piece(mainRow[x], BLACK)
-            pieceB.x = x; pieceB.y = 7
+            pieceB.x = x; pieceB.y = 7; pieceB.board = board
             pawnB = Piece(tp.PAWN, BLACK)
-            pawnB.x = x; pawnB.y = 6
+            pawnB.x = x; pawnB.y = 6; pawnB.board = board
             startStp[x][0] = pieceW
             startStp[x][1] = pawnW
             startStp[x][6] = pawnB
@@ -50,15 +49,17 @@ class Piece():
         self.y = None
         self.name = type["name"]
         self.board = None
+        self.hasMoved = False
         
     def setPos(self,x,y):
         self.board.setPiece(self.x,self.y,None)
         self.x = x
         self.y = y
         self.board.setPiece(self.x,self.y,self)
+        self.hasMoved = True
                 
     def findLegalFields(self):
-        return self.__checkfunc__()
+        return self.__checkfunc__(self, (self.x,self.y), self.board)
     
 class Board():
     def __init__(self):
@@ -75,7 +76,7 @@ class Board():
         self.pieces[x][y] = piece
         
     def startSetup(self):
-        self.pieces = getStartSetup()
+        self.pieces = getStartSetup(self)
         
     def getGraphicString(self):
         string = ("    A    B    C    D    E    F    G    H\n")
