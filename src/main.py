@@ -25,17 +25,42 @@ def start(setUp=True):
             printHelp()
             continue
         if commandString == LONG_CASTLING or commandString == SHORT_CASTLING:
-            tryCastling
+            castle(commandString, board, playing)
         try:
             command = parseCommand(commandString)
         except:
             print(PARSE_ERROR)
 
+def castle(length, board, color):
+    class CastlingError(Exception):pass;
+    y = 7-7*color
+    king = board.getPiece(4,y)
+    if length == LONG_CASTLING:
+        if (board.getPiece(1,y) or board.getPiece(2,y) or board.getPiece(3,y)):
+            raise CastlingError("Could not castle")
+        rook = board.getPiece(0,y)
+        newKingX = king.x - 2
+        newRookX = rook.x + 3
+    elif length == SHORT_CASTLING:
+        if (board.getPiece(5,y) or board.getPiece(6,y)):
+            raise CastlingError("Could not castle")
+        rook = board.getPiece(7,y)
+        newKingX = king.x + 2
+        newRookX = rook.x - 2
+    else:
+        raise ValueError("must be castling-value")
+    if rook and not rook.hasMoved and king and not king.hasMoved:
+        rook.setPos(newRookX,y)
+        king.setPos(newKingX,y)
+    else:
+        class CastlingError(Exception):pass;
+        raise CastlingError("Could not castle")
+
 def parseCommand(commandString):
     command = commandString.split("-")
-    x1 = letters[command[0][0].upper()]
+    x1 = LETTERS[command[0][0].upper()]
     y1 = int(command[0][1])-1
-    x2 = letters[command[1][0].upper()]
+    x2 = LETTERS[command[1][0].upper()]
     y2 = int(command[1][1])-1
     return ((x1,y1),(x2,y2))
 

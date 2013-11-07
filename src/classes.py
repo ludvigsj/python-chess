@@ -1,4 +1,5 @@
 import movecheckfuncs
+from math import abs
 from copy import deepcopy
 
 COMMAND_PROMPT = "%s, skriv inn en kommando: "
@@ -48,19 +49,29 @@ class Piece():
         self.x = None
         self.y = None
         self.name = type["name"]
+        self.board = None
+        
+    def setPos(self,x,y):
+        self.board.setPiece(self.x,self.y,None)
+        self.x = x
+        self.y = y
+        self.board.setPiece(self.x,self.y,self)
                 
     def findLegalFields(self):
-        return __checkfunc__()
+        return self.__checkfunc__()
     
 class Board():
     def __init__(self):
         self.pieces = [[None for i in range(8)] for j in range(8)]
      
+    def setPiece(self, x, y, val):
+        self.pieces[x][y] = val
+     
     def getPiece(self, x, y):
         return self.pieces[x][y]
     
     def addPiece(self, piece, x, y):
-        piece.x = x; piece.y = y
+        piece.x = x; piece.y = y; piece.board = self
         self.pieces[x][y] = piece
         
     def startSetup(self):
