@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import movecheckfuncs
 from copy import deepcopy
 
@@ -33,12 +35,12 @@ def getStartSetup(board):
             
 class Piece():
     class Type:
-        PAWN=   {"leg": movecheckfuncs.pawnGetLegals, "sym": ("B","b"), "letter": "", "name":"en bonde"}
-        KNIGHT= {"leg": movecheckfuncs.knightGetLegals, "sym": ("S","s"), "letter": "S", "name":"en springer"}
-        BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "sym": ("L","l"), "letter": "L", "name":"en løper"}
-        ROOK=   {"leg": movecheckfuncs.rookGetLegals, "sym": ("T","t"), "letter": "T", "name":"et tårn"}
-        QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "sym": ("D","d"), "letter": "D", "name":"en dronning"}
-        KING=   {"leg": movecheckfuncs.kingGetLegals, "sym": ("K","k"), "letter": "K", "name":"en konge"}    
+        PAWN=   {"leg": movecheckfuncs.pawnGetLegals, "sym": ("\u265F","\u2659"), "letter": "", "name":"en bonde"}
+        KNIGHT= {"leg": movecheckfuncs.knightGetLegals, "sym": ("\u265E","\u2658"), "letter": "S", "name":"en springer"}
+        BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "sym": ("\u265D","\u2657"), "letter": "L", "name":"en løper"}
+        ROOK=   {"leg": movecheckfuncs.rookGetLegals, "sym": ("\u265C","\u2656"), "letter": "T", "name":"et tårn"}
+        QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "sym": ("\u265B","\u2655"), "letter": "D", "name":"en dronning"}
+        KING=   {"leg": movecheckfuncs.kingGetLegals, "sym": ("\u265A","\u2654"), "letter": "K", "name":"en konge"}    
         
     def __init__(self, type, color):
         self.color = color
@@ -79,22 +81,23 @@ class Board():
         self.pieces = getStartSetup(self)
         
     def getGraphicString(self):
-        string = ("    A    B    C    D    E    F    G    H\n")
-        string += (" ┌"+"─"*5*8+"╖\n")
+        string = ("    A     B     C     D     E     F     G     H\n")
+        string += (" ┌"+"─"*6*8+"╖\n")
         for y in range(7,-1,-1):
             padLine = " │"
             line = "%i│"%(y+1)
             for x in range(8):
-                padLine += ("     " if (x%2+y%2)%2 else "█████")
+                padLine += ("      " if (x%2+y%2)%2 else "██████")
                 line += ("  " if (x%2+y%2)%2 else "██")
                 if self.getPiece(x, y):
                     line += self.getPiece(x, y).symbol
+                    line += " " 
                 else:
-                    line += (" " if (x%2+y%2)%2 else "█")
+                    line += ("  " if (x%2+y%2)%2 else "██")
                 line += ("  " if (x%2+y%2)%2 else "██")
             string += (padLine+"║\n")
             string += (line+"║%i\n"%(y+1))
             string += (padLine+"║\n")
-        string += (" ╘"+"═"*5*8+"╝\n")
-        string += ("    A    B    C    D    E    F    G    H")
+        string += (" ╘"+"═"*6*8+"╝\n")
+        string += ("    A     B     C     D     E     F     G     H")
         return string

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from classes import Piece, Board
 
 COMMAND_PROMPT = "%s, skriv inn en kommando: "
