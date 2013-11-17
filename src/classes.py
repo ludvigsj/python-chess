@@ -40,7 +40,13 @@ class Piece():
         BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "sym": ("\u265D","\u2657"), "letter": "L", "name":"en løper"}
         ROOK=   {"leg": movecheckfuncs.rookGetLegals, "sym": ("\u265C","\u2656"), "letter": "T", "name":"et tårn"}
         QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "sym": ("\u265B","\u2655"), "letter": "D", "name":"en dronning"}
-        KING=   {"leg": movecheckfuncs.kingGetLegals, "sym": ("\u265A","\u2654"), "letter": "K", "name":"en konge"}    
+        KING=   {"leg": movecheckfuncs.kingGetLegals, "sym": ("\u265A","\u2654"), "letter": "K", "name":"en konge"}
+        '''PAWN=   {"leg": movecheckfuncs.pawnGetLegals, "sym": ("a","A"), "letter": "", "name":"en bonde"}
+        KNIGHT= {"leg": movecheckfuncs.knightGetLegals, "sym": ("s","S"), "letter": "S", "name":"en springer"}
+        BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "sym": ("l","L"), "letter": "L", "name":"en løper"}
+        ROOK=   {"leg": movecheckfuncs.rookGetLegals, "sym": ("t","T"), "letter": "T", "name":"et tårn"}
+        QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "sym": ("d","D"), "letter": "D", "name":"en dronning"}
+        KING=   {"leg": movecheckfuncs.kingGetLegals, "sym": ("k","K"), "letter": "K", "name":"en konge"}'''    
         
     def __init__(self, type, color):
         self.color = color

@@ -5,9 +5,7 @@ X = 0
 bounds = lambda x: x <= 7 and x >= 0
 
 def pawnGetLegals(piece, startPos, board):
-    
-    print(board)
-    
+        
     Y0 = startPos[Y]
     X0 = startPos[X]
     
@@ -35,7 +33,7 @@ def rookGetLegals(piece, startPos, board):
     def addAllXInRange(rng):
         for x in rng:
             if board.getPiece(x,Y0):
-                if board(x,Y0).color != piece.color: results.append((x,Y0))
+                if board.getPiece(x,Y0).color != piece.color: results.append((x,Y0))
                 break
             results.append((x,Y0))
         
