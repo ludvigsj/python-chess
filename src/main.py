@@ -2,12 +2,12 @@
 import movecheckfuncs
 from copy import deepcopy
 
-PAWN=   {"leg": movecheckfuncs.pawnGetLegals, "hasMoved": False, "col": -1, "sym": ("B","b"), "letter": "", "name":"en bonde"}
-KNIGHT= {"leg": movecheckfuncs.knightGetLegals, "col": -1, "sym": ("S","s"), "letter": "S", "name":"en springer"}
-BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "col": -1, "sym": ("L","l"), "letter": "L", "name":"en løper"}
-ROOK=   {"leg": movecheckfuncs.rookGetLegals, "col": -1, "sym": ("T","t"), "letter": "T", "name":"et tårn"}
-QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "col": -1, "sym": ("D","d"), "letter": "D", "name":"en dronning"}
-KING=   {"leg": movecheckfuncs.kingGetLegals, "col": -1, "sym": ("K","k"), "letter": "K", "name":"en konge"}
+PAWN=   {"leg": movecheckfuncs.pawnGetLegals, "hasMoved": False, "col": -1, "sym": ("\u265F","\u2659"), "letter": "", "name":"en bonde"}
+KNIGHT= {"leg": movecheckfuncs.knightGetLegals, "col": -1, "sym": ("\u265E","\u2658"), "letter": "S", "name":"en springer"}
+BISHOP= {"leg": movecheckfuncs.bishopGetLegals, "col": -1, "sym": ("\u265D","\u2657"), "letter": "L", "name":"en løper"}
+ROOK=   {"leg": movecheckfuncs.rookGetLegals, "col": -1, "sym": ("\u265C","\u2656"), "letter": "T", "name":"et tårn"}
+QUEEN=  {"leg": movecheckfuncs.queenGetLegals, "col": -1, "sym": ("\u265B","\u2655"), "letter": "D", "name":"en dronning"}
+KING=   {"leg": movecheckfuncs.kingGetLegals, "col": -1, "sym": ("\u265A","\u2654"), "letter": "K", "name":"en konge"}
 
 LETTERS={"A":0,"B":1,"C":2,"D":3,"E":4,"F":5, "G":6, "H":7}
 
@@ -37,9 +37,25 @@ def main():
             if isCheckMate(BLACK,board):
                 print("Sjakkmatt! Hvit spiller vant")
                 break
+            runPawnConverter(board,currentColor)
             currentColor = (currentColor+1)%2
             if isInCheck(currentColor,board):
-                print("Din konge står i sjakk")
+                print(("Hvit, " if currentColor == WHITE else "Svart, ") + "din konge står i sjakk")            
+            
+def runPawnConverter(board,color):
+    for x in range(8):
+        if board[x][0+7*color] and board[x][0+7*color]["letter"] == "":
+            changeTo = input("Hva vil du forfremme bonden til? (D/L/S/T): ")
+            while True:
+                if changeTo == "D": board[x][0+7*color] = deepcopy(QUEEN)
+                elif changeTo == "L": board[x][0+7*color] = deepcopy(BISHOP)
+                elif changeTo == "S": board[x][0+7*color] = deepcopy(KNIGHT)
+                elif changeTo == "T": board[x][0+7*color] = deepcopy(ROOK)
+                else:
+                    changeTo = input("Du kan ikke forfremme til %s\nHva vil du forfremme bonden til? (D/L/S/T): "%changeTo)
+                    continue
+                board[x][0+7*color]["col"] = color
+                break
         
     
 def printHelp():
@@ -91,12 +107,12 @@ def printBoard(board):
         padLine = " │"
         line = "%i│"%(y+1)
         for x in range(8):
-            padLine += ("     " if (x%2+y%2)%2 else "█████")
+            padLine += ("      " if (x%2+y%2)%2 else "██████")
             line += ("  " if (x%2+y%2)%2 else "██")
             if board[x][y]:
-                line += board[x][y]["sym"][board[x][y]["col"]]
+                line += board[x][y]["sym"][board[x][y]["col"]] + " "
             else:
-                line += (" " if (x%2+y%2)%2 else "█")
+                line += ("  " if (x%2+y%2)%2 else "██")
             line += ("  " if (x%2+y%2)%2 else "██")
         print(padLine+"║")
         print(line+"║%i"%(y+1))
